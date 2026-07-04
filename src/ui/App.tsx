@@ -140,33 +140,39 @@ export function App() {
   return (
     <main className={isFullPage ? "app appFull" : "app"}>
       <header className="toolbar">
-        <button className="button buttonSecondary" onClick={pasteFromClipboard} title="Paste from clipboard">
-          <Clipboard size={16} /> Paste
-        </button>
-        <label className="button buttonSecondary fileButton" title="Import file">
-          <FileInput size={16} /> Import
-          <input
-            type="file"
-            accept=".json,.txt,.log,application/json,text/plain"
-            onChange={(event) => {
-              const file = event.currentTarget.files?.[0];
-              if (file) void importFile(file);
-            }}
-          />
-        </label>
-        <button className="button buttonGhost" onClick={() => window.open("/workbench.html", "_blank")} title="Open full page">
-          <Maximize2 size={16} /> Full
-        </button>
-        <button
-          onClick={() => setPrivateMode((value) => !value)}
-          className={privateMode ? "button buttonToggle active" : "button buttonToggle"}
-          title="Private mode stops this session from writing input or repaired JSON to local history."
-        >
-          <Settings size={16} /> Private
-        </button>
-        <span className={privateMode ? "privateHint active" : "privateHint"}>
-          {privateMode ? "History saving is paused." : "Private pauses local history for this session."}
-        </span>
+        <div className="brandBlock">
+          <span className="eyebrow">Local JSON workbench</span>
+          <h1>Repair, inspect, and derive.</h1>
+        </div>
+        <div className="toolbarActions">
+          <button className="button buttonSecondary" onClick={pasteFromClipboard} title="Paste from clipboard">
+            <Clipboard size={16} /> Paste
+          </button>
+          <label className="button buttonSecondary fileButton" title="Import file">
+            <FileInput size={16} /> Import
+            <input
+              type="file"
+              accept=".json,.txt,.log,application/json,text/plain"
+              onChange={(event) => {
+                const file = event.currentTarget.files?.[0];
+                if (file) void importFile(file);
+              }}
+            />
+          </label>
+          <button className="button buttonGhost" onClick={() => window.open("/workbench.html", "_blank")} title="Open full page">
+            <Maximize2 size={16} /> Full
+          </button>
+          <button
+            onClick={() => setPrivateMode((value) => !value)}
+            className={privateMode ? "button buttonToggle active" : "button buttonToggle"}
+            title="Private mode stops this session from writing input or repaired JSON to local history."
+          >
+            <Settings size={16} /> Private
+          </button>
+          <span className={privateMode ? "privateHint active" : "privateHint"}>
+            {privateMode ? "History saving is paused." : "Private pauses local history for this session."}
+          </span>
+        </div>
       </header>
 
       <section className="mainTabs">
@@ -180,7 +186,10 @@ export function App() {
         <section className="workspace">
           <section className="panel inputPane">
             <div className="paneHeader">
-              <strong>Input</strong>
+              <div>
+                <span className="paneKicker">01</span>
+                <strong>Input</strong>
+              </div>
               <StatusBadge busy={busy} status={repairResult?.report.status} />
             </div>
             <div className="inputControls">
@@ -208,7 +217,10 @@ export function App() {
 
           <section className="panel outputPane">
             <div className="paneHeader">
-              <strong>Output</strong>
+              <div>
+                <span className="paneKicker">02</span>
+                <strong>Output</strong>
+              </div>
               <span>{activeOutput.label}</span>
             </div>
             <div className="outputTabs">
