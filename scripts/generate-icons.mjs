@@ -39,25 +39,47 @@ function makeIcon(size) {
 
   drawBrace(image, size, "left", [217, 119, 87, 255]);
   drawBrace(image, size, "right", [217, 119, 87, 255]);
-
-  const ruleH = Math.max(1, Math.round(size * 0.035));
-  rect(image, size, Math.round(size * 0.34), Math.round(size * 0.31), Math.round(size * 0.32), ruleH, [120, 140, 93, 255]);
-  rect(image, size, Math.round(size * 0.34), Math.round(size * 0.66), Math.round(size * 0.32), ruleH, [120, 140, 93, 255]);
+  drawWrench(image, size, [120, 140, 93, 255]);
+  drawJ(image, size, [20, 20, 19, 255]);
 
   return encodePng(size, size, image);
 }
 
 function drawBrace(image, size, side, color) {
-  const thick = Math.max(1, Math.round(size * 0.055));
-  const x = side === "left" ? Math.round(size * 0.31) : Math.round(size * 0.63);
-  const y = Math.round(size * 0.37);
-  const h = Math.round(size * 0.26);
-  const arm = Math.round(size * 0.08);
+  const thick = Math.max(1, Math.round(size * 0.075));
+  const x = side === "left" ? Math.round(size * 0.25) : Math.round(size * 0.68);
+  const y = Math.round(size * 0.28);
+  const h = Math.round(size * 0.44);
+  const arm = Math.round(size * 0.12);
   const dir = side === "left" ? -1 : 1;
   rect(image, size, x, y, thick, h, color);
   rect(image, size, x, y, arm * dir, thick, color);
   rect(image, size, x, y + Math.round(h / 2), arm * dir, thick, color);
   rect(image, size, x, y + h - thick, arm * dir, thick, color);
+}
+
+function drawWrench(image, size, color) {
+  const thickness = Math.max(1, Math.round(size * 0.055));
+  const x1 = Math.round(size * 0.39);
+  const y1 = Math.round(size * 0.66);
+  const x2 = Math.round(size * 0.62);
+  const y2 = Math.round(size * 0.36);
+  line(image, size, x1, y1, x2, y2, thickness, color);
+  circle(image, size, x2, y2, Math.max(2, Math.round(size * 0.07)), color);
+  circle(image, size, x2 + Math.round(size * 0.015), y2 - Math.round(size * 0.01), Math.max(1, Math.round(size * 0.035)), [255, 255, 255, 255]);
+  circle(image, size, x1, y1, Math.max(2, Math.round(size * 0.045)), color);
+}
+
+function drawJ(image, size, color) {
+  const thick = Math.max(1, Math.round(size * 0.055));
+  const x = Math.round(size * 0.51);
+  const y = Math.round(size * 0.47);
+  const h = Math.round(size * 0.24);
+  const top = Math.round(size * 0.15);
+  rect(image, size, x - top + thick, y, top, thick, color);
+  rect(image, size, x, y, thick, h, color);
+  rect(image, size, x - Math.round(size * 0.1), y + h - thick, Math.round(size * 0.13), thick, color);
+  rect(image, size, x - Math.round(size * 0.12), y + h - Math.round(size * 0.08), thick, Math.round(size * 0.08), color);
 }
 
 function fill(image, size, color) {
@@ -73,6 +95,24 @@ function rect(image, size, x, y, width, height, color) {
   const y2 = height < 0 ? y : y + height;
   for (let py = y1; py < y2; py += 1) {
     for (let px = x1; px < x2; px += 1) setPixel(image, size, px, py, color);
+  }
+}
+
+function line(image, size, x1, y1, x2, y2, thickness, color) {
+  const steps = Math.max(Math.abs(x2 - x1), Math.abs(y2 - y1));
+  for (let i = 0; i <= steps; i += 1) {
+    const t = steps === 0 ? 0 : i / steps;
+    const x = Math.round(x1 + (x2 - x1) * t);
+    const y = Math.round(y1 + (y2 - y1) * t);
+    circle(image, size, x, y, Math.ceil(thickness / 2), color);
+  }
+}
+
+function circle(image, size, cx, cy, radius, color) {
+  for (let y = cy - radius; y <= cy + radius; y += 1) {
+    for (let x = cx - radius; x <= cx + radius; x += 1) {
+      if ((x - cx) ** 2 + (y - cy) ** 2 <= radius ** 2) setPixel(image, size, x, y, color);
+    }
   }
 }
 
