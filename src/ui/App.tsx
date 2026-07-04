@@ -1,4 +1,4 @@
-import { Clipboard, Copy, FileInput, History, Maximize2, Play, RefreshCcw, Settings } from "lucide-react";
+import { Clipboard, Copy, Eraser, FileInput, History, Maximize2, RefreshCcw, Save, Settings } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { OutputKind } from "../core/outputs";
 import { defaultSettings, type GeneratorSettings, type HistoryItem, type InputSource, type RepairResult } from "../core/types";
@@ -29,12 +29,20 @@ export function App() {
   const [privateMode, setPrivateMode] = useState(false);
   const [busy, setBusy] = useState(false);
   const [lastSavedInput, setLastSavedInput] = useState("");
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
 
   const isFullPage = useMemo(() => location.pathname.includes("workbench"), []);
 
   useEffect(() => {
     void loadPendingSelection();
     void refreshHistory();
+    if (typeof chrome === "undefined" || !chrome.storage?.onChanged) return;
+    const listener = (changes: Record<string, chrome.storage.StorageChange>, areaName: string) => {
+      if (areaName !== "local" || typeof changes.pendingSelectionText?.newValue !== "string") return;
+      void loadPendingSelection();
+    };
+    chrome.storage.onChanged.addListener(listener);
+    return () => chrome.storage.onChanged.removeListener(listener);
   }, []);
 
   useEffect(() => {
@@ -115,7 +123,14 @@ export function App() {
   }
 
   async function copyOutput() {
-    await navigator.clipboard.writeText(output);
+    try {
+      await writeClipboard(output);
+      setCopyState("copied");
+    } catch {
+      setCopyState("failed");
+    } finally {
+      window.setTimeout(() => setCopyState("idle"), 1600);
+    }
   }
 
   function refreshMock() {
@@ -125,10 +140,10 @@ export function App() {
   return (
     <main className={isFullPage ? "app appFull" : "app"}>
       <header className="toolbar">
-        <button onClick={pasteFromClipboard} title="Paste from clipboard">
+        <button className="button buttonSecondary" onClick={pasteFromClipboard} title="Paste from clipboard">
           <Clipboard size={16} /> Paste
         </button>
-        <label className="fileButton" title="Import file">
+        <label className="button buttonSecondary fileButton" title="Import file">
           <FileInput size={16} /> Import
           <input
             type="file"
@@ -139,17 +154,24 @@ export function App() {
             }}
           />
         </label>
-        <button onClick={() => window.open("/workbench.html", "_blank")} title="Open full page">
+        <button className="button buttonGhost" onClick={() => window.open("/workbench.html", "_blank")} title="Open full page">
           <Maximize2 size={16} /> Full
         </button>
-        <button onClick={() => setPrivateMode((value) => !value)} className={privateMode ? "active" : ""} title="Private mode">
+        <button
+          onClick={() => setPrivateMode((value) => !value)}
+          className={privateMode ? "button buttonToggle active" : "button buttonToggle"}
+          title="Private mode stops this session from writing input or repaired JSON to local history."
+        >
           <Settings size={16} /> Private
         </button>
+        <span className={privateMode ? "privateHint active" : "privateHint"}>
+          {privateMode ? "History saving is paused." : "Private pauses local history for this session."}
+        </span>
       </header>
 
       <section className="mainTabs">
-        <button className={view === "workbench" ? "active" : ""} onClick={() => setView("workbench")}>Workbench</button>
-        <button className={view === "history" ? "active" : ""} onClick={() => setView("history")}>
+        <button className={view === "workbench" ? "tabButton active" : "tabButton"} onClick={() => setView("workbench")}>Workbench</button>
+        <button className={view === "history" ? "tabButton active" : "tabButton"} onClick={() => setView("history")}>
           <History size={15} /> History
         </button>
       </section>
@@ -159,15 +181,22 @@ export function App() {
           <section className="panel inputPane">
             <div className="paneHeader">
               <strong>Input</strong>
-              <span>{busy ? "Processing..." : repairResult ? `Status: ${repairResult.report.status}` : "Idle"}</span>
+              <StatusBadge busy={busy} status={repairResult?.report.status} />
+            </div>
+            <div className="inputControls">
+              <div className="sourceRow">
+                <span className="sourceChip">Source: {source}</span>
+              </div>
+              <div className="statusBar">
+                <button className="button buttonGhost" onClick={() => setInput("")}>
+                  <Eraser size={16} /> Clear
+                </button>
+                <button className="button buttonPrimary" onClick={() => runRepair(source, input, { saveHistory: true })}>
+                  <Save size={16} /> Save Snapshot
+                </button>
+              </div>
             </div>
             <CodeEditor value={input} onChange={setInput} minHeight={isFullPage ? 620 : 260} />
-            <div className="statusBar">
-              <span>Source: {source}</span>
-              <button onClick={() => runRepair(source, input, { saveHistory: true })}>
-                <Play size={16} /> Run
-              </button>
-            </div>
             {repairResult && <RepairReportView result={repairResult} />}
           </section>
 
@@ -178,18 +207,18 @@ export function App() {
             </div>
             <div className="outputTabs">
               {outputTabs.map((tab) => (
-                <button key={tab.kind} className={activeOutput.kind === tab.kind ? "active" : ""} onClick={() => setActiveOutput(tab)}>
+                <button key={tab.kind} className={activeOutput.kind === tab.kind ? "outputTab active" : "outputTab"} onClick={() => setActiveOutput(tab)}>
                   {tab.label}
                 </button>
               ))}
             </div>
             <div className="outputToolbar">
-              <button onClick={copyOutput} disabled={!output}>
-                <Copy size={16} /> Copy {activeOutput.label}
+              <button className={copyState === "copied" ? "button buttonSuccess" : "button buttonPrimary"} onClick={copyOutput} disabled={!output}>
+                <Copy size={16} /> {copyState === "copied" ? "Copied" : copyState === "failed" ? "Copy failed" : `Copy ${activeOutput.label}`}
               </button>
               {activeOutput.kind === "mock" && (
                 <>
-                  <button onClick={refreshMock}>
+                  <button className="button buttonSecondary" onClick={refreshMock}>
                     <RefreshCcw size={16} /> Refresh
                   </button>
                   <select
@@ -223,6 +252,7 @@ export function App() {
         <section className="panel historyList">
           <div className="outputToolbar">
             <button
+              className="button buttonSecondary"
               onClick={async () => {
                 await clearSensitiveHistory();
                 await refreshHistory();
@@ -231,6 +261,7 @@ export function App() {
               Clear sensitive
             </button>
             <button
+              className="button buttonDanger"
               onClick={async () => {
                 await clearHistory();
                 await refreshHistory();
@@ -242,6 +273,7 @@ export function App() {
           {historyItems.map((item) => (
             <article key={item.id} className="historyItem">
               <button
+                className="historyLoadButton"
                 onClick={() => {
                   setInput(item.rawInput);
                   setSource("history");
@@ -254,7 +286,7 @@ export function App() {
                 {item.sensitive && <mark>sensitive</mark>}
               </button>
               <button
-                className="iconOnly"
+                className="button buttonGhost iconOnly"
                 onClick={async () => {
                   await deleteHistoryItem(item.id);
                   await refreshHistory();
@@ -285,6 +317,33 @@ function RepairReportView({ result }: { result: RepairResult }) {
       )}
     </aside>
   );
+}
+
+function StatusBadge({ busy, status }: { busy: boolean; status?: RepairResult["report"]["status"] }) {
+  if (busy) return <span className="statusBadge processing">Processing</span>;
+  if (!status) return <span className="statusBadge idle">Idle</span>;
+  return <span className={`statusBadge ${status}`}>{status}</span>;
+}
+
+async function writeClipboard(text: string): Promise<void> {
+  try {
+    await navigator.clipboard.writeText(text);
+    return;
+  } catch {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.setAttribute("readonly", "true");
+    textarea.style.position = "fixed";
+    textarea.style.left = "-9999px";
+    textarea.style.top = "0";
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+    textarea.setSelectionRange(0, textarea.value.length);
+    const copied = document.execCommand("copy");
+    document.body.removeChild(textarea);
+    if (!copied) throw new Error("Copy command failed");
+  }
 }
 
 function buildDiffText(raw: string, repaired: string): string {

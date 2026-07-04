@@ -14,7 +14,7 @@ body {
 
 button,
 select,
-.fileButton {
+.button {
   align-items: center;
   background: #ffffff;
   border: 1px solid #d7dce3;
@@ -28,12 +28,39 @@ select,
   padding: 6px 10px;
 }
 
-button.active,
-.mainTabs .active,
-.outputTabs .active {
+.buttonPrimary {
   background: #163b57;
   border-color: #163b57;
   color: #ffffff;
+}
+
+.buttonSecondary {
+  background: #f3f6f8;
+  border-color: #cfd7df;
+}
+
+.buttonGhost {
+  background: transparent;
+  border-color: transparent;
+  color: #415064;
+}
+
+.buttonToggle.active {
+  background: #22313f;
+  border-color: #22313f;
+  color: #ffffff;
+}
+
+.buttonSuccess {
+  background: #0f7a4f;
+  border-color: #0f7a4f;
+  color: #ffffff;
+}
+
+.buttonDanger {
+  background: #fff4f2;
+  border-color: #f1b7ad;
+  color: #9f1d12;
 }
 
 button:disabled {
@@ -59,7 +86,8 @@ button:disabled {
 .mainTabs,
 .outputTabs,
 .outputToolbar,
-.statusBar {
+.statusBar,
+.sourceRow {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -69,6 +97,16 @@ button:disabled {
   align-items: center;
   border-bottom: 1px solid #e1e5ea;
   padding-bottom: 10px;
+}
+
+.privateHint {
+  color: #53606f;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.privateHint.active {
+  color: #915900;
 }
 
 .fileButton input {
@@ -101,6 +139,83 @@ button:disabled {
   font-size: 14px;
 }
 
+.tabButton,
+.outputTab {
+  background: transparent;
+  border-color: transparent;
+  color: #415064;
+}
+
+.tabButton.active {
+  background: #163b57;
+  border-color: #163b57;
+  color: #ffffff;
+}
+
+.outputTabs {
+  border-bottom: 1px solid #d9dee6;
+  gap: 0;
+  min-height: 33px;
+}
+
+.outputTab {
+  border-radius: 6px 6px 0 0;
+  border-bottom-color: transparent;
+}
+
+.outputTab.active {
+  background: #ffffff;
+  border-color: #d9dee6;
+  border-bottom-color: #ffffff;
+  color: #163b57;
+  font-weight: 600;
+  margin-bottom: -1px;
+}
+
+.statusBadge {
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 12px;
+  line-height: 1;
+  padding: 5px 8px;
+  text-transform: capitalize;
+}
+
+.statusBadge.idle {
+  background: #eef2f6;
+  color: #53606f;
+}
+
+.statusBadge.valid {
+  background: #e8f6ee;
+  border-color: #b8dec6;
+  color: #146c43;
+}
+
+.statusBadge.repaired {
+  background: #fff2cf;
+  border-color: #e7bd54;
+  color: #7a4b00;
+}
+
+.statusBadge.warning {
+  background: #fff0e5;
+  border-color: #e2a678;
+  color: #8a3c00;
+}
+
+.statusBadge.failed {
+  background: #fff0ee;
+  border-color: #efb4ad;
+  color: #a11d12;
+}
+
+.statusBadge.processing {
+  background: #e8f1fb;
+  border-color: #b9d2ee;
+  color: #1d5b91;
+}
+
 .editor {
   background: #ffffff;
   border: 1px solid #d9dee6;
@@ -112,7 +227,39 @@ button:disabled {
   align-items: center;
   color: #53606f;
   font-size: 13px;
-  justify-content: space-between;
+  justify-content: flex-end;
+  min-height: 33px;
+}
+
+.statusBar span {
+  margin-right: auto;
+}
+
+.inputControls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 103px;
+}
+
+.sourceRow {
+  align-items: center;
+  min-height: 33px;
+}
+
+.sourceChip {
+  background: #eef2f6;
+  border: 1px solid #d7dce3;
+  border-radius: 999px;
+  color: #53606f;
+  font-size: 12px;
+  padding: 5px 8px;
+}
+
+.outputToolbar {
+  align-content: flex-start;
+  align-items: flex-start;
+  min-height: 33px;
 }
 
 .repairReport {
@@ -161,6 +308,12 @@ button:disabled {
   display: flex;
   flex-direction: column;
   text-align: left;
+}
+
+.historyLoadButton {
+  background: transparent;
+  color: #1d2430;
+  padding: 6px;
 }
 
 .historyItem span {

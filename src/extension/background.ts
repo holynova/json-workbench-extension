@@ -1,12 +1,23 @@
 const selectionStorageKey = "pendingSelectionText";
+const contextMenuId = "fix-selected-json";
 
-chrome.runtime.onInstalled.addListener(() => {
+chrome.runtime.onInstalled.addListener(async () => {
+  await ensureContextMenu();
+  await chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
+});
+
+chrome.runtime.onStartup.addListener(() => {
+  void ensureContextMenu();
+});
+
+async function ensureContextMenu(): Promise<void> {
+  await chrome.contextMenus.removeAll();
   chrome.contextMenus.create({
-    id: "fix-selected-json",
+    id: contextMenuId,
     title: "Fix selected JSON",
     contexts: ["selection"]
   });
-});
+}
 
 chrome.action.onClicked.addListener(async (tab) => {
   await openSidePanel(tab.windowId);
@@ -19,7 +30,7 @@ chrome.commands.onCommand.addListener(async (command) => {
 });
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-  if (info.menuItemId !== "fix-selected-json" || !info.selectionText) return;
+  if (info.menuItemId !== contextMenuId || !info.selectionText) return;
   await chrome.storage.local.set({ [selectionStorageKey]: info.selectionText });
   await openSidePanel(tab?.windowId);
 });
@@ -29,4 +40,3 @@ async function openSidePanel(windowId?: number): Promise<void> {
     await chrome.sidePanel.open({ windowId });
   }
 }
-
