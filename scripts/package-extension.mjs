@@ -8,6 +8,6 @@ const zipPath = resolve(releaseDir, `json-workbench-extension-${packageJson.vers
 
 mkdirSync(releaseDir, { recursive: true });
 rmSync(zipPath, { force: true });
-execFileSync("zip", ["-r", zipPath, "."], { cwd: resolve("dist"), stdio: "inherit" });
+execFileSync("zip", ["-r", zipPath, ".", "-x", "*.DS_Store", "__MACOSX/*"], { cwd: resolve("dist"), stdio: "inherit" });
 
 console.log(`Created ${zipPath}`);
