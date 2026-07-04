@@ -1,7 +1,8 @@
 import { json } from "@codemirror/lang-json";
 import { javascript } from "@codemirror/lang-javascript";
 import { python } from "@codemirror/lang-python";
-import { EditorState } from "@codemirror/state";
+import { EditorState, RangeSetBuilder } from "@codemirror/state";
+import { Decoration } from "@codemirror/view";
 import { EditorView, basicSetup } from "codemirror";
 import { useEffect, useRef } from "react";
 
@@ -13,9 +14,11 @@ interface CodeEditorProps {
   readonly?: boolean;
   language?: Language;
   minHeight?: number;
+  errorLine?: number;
+  errorColumn?: number;
 }
 
-export function CodeEditor({ value, onChange, readonly = false, language = "json", minHeight = 240 }: CodeEditorProps) {
+export function CodeEditor({ value, onChange, readonly = false, language = "json", minHeight = 240, errorLine, errorColumn }: CodeEditorProps) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const viewRef = useRef<EditorView | null>(null);
   const onChangeRef = useRef(onChange);
@@ -32,6 +35,7 @@ export function CodeEditor({ value, onChange, readonly = false, language = "json
           languageExtension(language),
           EditorView.editable.of(!readonly),
           EditorState.readOnly.of(readonly),
+          errorHighlightExtension(errorLine, errorColumn),
           EditorView.updateListener.of((update) => {
             if (update.docChanged) onChangeRef.current?.(update.state.doc.toString());
           }),
@@ -44,7 +48,7 @@ export function CodeEditor({ value, onChange, readonly = false, language = "json
     });
     viewRef.current = view;
     return () => view.destroy();
-  }, [language, minHeight, readonly]);
+  }, [language, minHeight, readonly, errorLine, errorColumn]);
 
   useEffect(() => {
     const view = viewRef.current;
@@ -62,3 +66,22 @@ function languageExtension(language: Language) {
   return [];
 }
 
+function errorHighlightExtension(errorLine?: number, errorColumn?: number) {
+  return EditorView.decorations.compute([], (state) => {
+    if (!errorLine || errorLine < 1 || errorLine > state.doc.lines) return Decoration.none;
+
+    const builder = new RangeSetBuilder<Decoration>();
+    const line = state.doc.line(errorLine);
+    builder.add(line.from, line.from, Decoration.line({ class: "cm-error-line" }));
+
+    if (errorColumn && errorColumn > 0) {
+      const markFrom = Math.min(line.from + errorColumn - 1, line.to);
+      const markTo = Math.min(markFrom + 1, line.to);
+      if (markTo > markFrom) {
+        builder.add(markFrom, markTo, Decoration.mark({ class: "cm-error-token" }));
+      }
+    }
+
+    return builder.finish();
+  });
+}

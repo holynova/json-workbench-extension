@@ -48,7 +48,7 @@ function normalized(value: string): string {
 
 function buildDiagnostic(input: string, error: unknown): RepairDiagnostic {
   const message = error instanceof Error ? error.message : String(error);
-  const location = parseLocation(message);
+  const location = parseLocation(input, message);
   const snippet = location ? snippetAt(input, location.line, location.column) : input.slice(0, 240);
 
   return {
@@ -60,14 +60,23 @@ function buildDiagnostic(input: string, error: unknown): RepairDiagnostic {
   };
 }
 
-function parseLocation(message: string): { line: number; column: number } | undefined {
+function parseLocation(input: string, message: string): { line: number; column: number } | undefined {
   const lineColumn = message.match(/line\s+(\d+)\s+column\s+(\d+)/i);
   if (lineColumn) {
     return { line: Number(lineColumn[1]), column: Number(lineColumn[2]) };
   }
   const position = message.match(/position\s+(\d+)/i);
   if (!position) return undefined;
-  return { line: 1, column: Number(position[1]) + 1 };
+  return offsetToLineColumn(input, Number(position[1]));
+}
+
+function offsetToLineColumn(input: string, offset: number): { line: number; column: number } {
+  const prefix = input.slice(0, Math.max(offset, 0));
+  const lines = prefix.split(/\r?\n/);
+  return {
+    line: lines.length,
+    column: (lines.at(-1)?.length ?? 0) + 1
+  };
 }
 
 function snippetAt(input: string, line: number, column: number): string {
@@ -91,4 +100,3 @@ function inferSuggestedFix(message: string): string {
   if (/end|unexpected/i.test(message)) return "Check for a missing closing brace, bracket, or value near the end.";
   return "Review the highlighted area and provide the missing structural token.";
 }
-

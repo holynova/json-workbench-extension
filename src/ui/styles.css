@@ -223,6 +223,18 @@ button:disabled {
   overflow: hidden;
 }
 
+.cm-error-line {
+  background: #fff0ee;
+}
+
+.cm-error-token {
+  background: #ffd8d2;
+  outline: 1px solid #d92d20;
+  text-decoration: underline;
+  text-decoration-color: #d92d20;
+  text-decoration-thickness: 2px;
+}
+
 .statusBar {
   align-items: center;
   color: #53606f;

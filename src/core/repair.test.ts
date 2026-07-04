@@ -29,4 +29,13 @@ describe("repairJson", () => {
     expect(result.report.status).toBe("failed");
     expect(result.report.diagnostic?.suggestedFix).toBeTruthy();
   });
+
+  it("reports line and column for multiline parse failures", () => {
+    const result = repairJson('{\n  "name": "Alice",\n  "bad": "\\uZZZZ"\n}');
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(result.report.diagnostic?.line).toBe(3);
+    expect(result.report.diagnostic?.column).toBeGreaterThan(1);
+    expect(result.report.diagnostic?.snippet).toContain("^");
+  });
 });

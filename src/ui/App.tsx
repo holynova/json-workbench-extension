@@ -196,7 +196,13 @@ export function App() {
                 </button>
               </div>
             </div>
-            <CodeEditor value={input} onChange={setInput} minHeight={isFullPage ? 620 : 260} />
+            <CodeEditor
+              value={input}
+              onChange={setInput}
+              minHeight={isFullPage ? 620 : 260}
+              errorLine={!repairResult?.ok ? repairResult?.report.diagnostic?.line : undefined}
+              errorColumn={!repairResult?.ok ? repairResult?.report.diagnostic?.column : undefined}
+            />
             {repairResult && <RepairReportView result={repairResult} />}
           </section>
 
