@@ -52,6 +52,7 @@ button:disabled {
 .appFull {
   max-width: 1440px;
   margin: 0 auto;
+  width: 100%;
 }
 
 .toolbar,
@@ -78,6 +79,26 @@ button:disabled {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+}
+
+.paneHeader {
+  align-items: center;
+  color: #53606f;
+  display: flex;
+  font-size: 13px;
+  justify-content: space-between;
+}
+
+.paneHeader strong {
+  color: #1d2430;
+  font-size: 14px;
 }
 
 .editor {
@@ -159,8 +180,14 @@ mark {
 }
 
 @media (min-width: 900px) {
-  .appFull .panel {
-    min-width: 860px;
+  .appFull .workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .appFull .inputPane,
+  .appFull .outputPane {
+    min-width: 0;
   }
 }
-
