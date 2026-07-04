@@ -1,0 +1,62 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    name: Build extension and publish release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+      - name: Audit
+        run: npm audit --audit-level=moderate
+
+      - name: Package Chrome extension
+        run: npm run package:chrome
+
+      - name: Resolve release artifact
+        id: artifact
+        shell: bash
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          ZIP="release/json-workbench-extension-${VERSION}.zip"
+          if [ ! -f "$ZIP" ]; then
+            echo "Missing release artifact: $ZIP" >&2
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "zip=$ZIP" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: JSON Workbench ${{ github.ref_name }}
+          body: |
+            Chrome extension build for `${{ github.ref_name }}`.
+
+            Upload `json-workbench-extension-${{ steps.artifact.outputs.version }}.zip` to the Chrome Web Store Developer Dashboard.
+          files: ${{ steps.artifact.outputs.zip }}
