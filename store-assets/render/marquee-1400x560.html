@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      :root {
+        --ivory: #faf9f5;
+        --paper: #ffffff;
+        --slate: #141413;
+        --clay: #d97757;
+        --clay-d: #b85c3e;
+        --oat: #e3dacc;
+        --olive: #788c5d;
+        --g100: #f0eee6;
+        --g300: #d1cfc5;
+        --g500: #87867f;
+        --serif: ui-serif, Georgia, "Times New Roman", Times, serif;
+        --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+      }
+      html, body { margin: 0; width: 1400px; height: 560px; overflow: hidden; }
+      body {
+        background:
+          linear-gradient(90deg, rgba(209,207,197,.28) 1px, transparent 1px),
+          linear-gradient(180deg, rgba(209,207,197,.24) 1px, transparent 1px),
+          var(--ivory);
+        background-size: 40px 40px;
+        color: var(--slate);
+        font-family: var(--sans);
+      }
+      .frame {
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        padding: 58px 72px;
+        display: grid;
+        grid-template-columns: 1fr 520px;
+        gap: 64px;
+        align-items: center;
+      }
+      .eyebrow {
+        align-items: center;
+        color: var(--g500);
+        display: inline-flex;
+        font: 400 18px/1 var(--mono);
+        gap: 14px;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+      }
+      .eyebrow::before { background: var(--clay); content: ""; height: 1.5px; width: 44px; }
+      h1 {
+        font: 500 78px/1.04 var(--serif);
+        letter-spacing: -.018em;
+        margin: 24px 0 24px;
+        max-width: 10ch;
+      }
+      p {
+        color: #3d3d3a;
+        font-size: 24px;
+        line-height: 1.45;
+        margin: 0;
+        max-width: 680px;
+      }
+      .pane {
+        background: var(--paper);
+        border: 1.5px solid var(--slate);
+        border-radius: 24px;
+        box-shadow: 0 12px 32px rgba(20,20,19,.10);
+        box-sizing: border-box;
+        padding: 28px;
+        transform: rotate(1.5deg);
+      }
+      .tag {
+        background: var(--g100);
+        border: 1.5px solid var(--g300);
+        border-radius: 999px;
+        color: var(--clay-d);
+        display: inline-flex;
+        font: 600 16px/1 var(--mono);
+        letter-spacing: .08em;
+        padding: 10px 14px;
+        text-transform: uppercase;
+      }
+      pre {
+        color: var(--slate);
+        font: 400 22px/1.55 var(--mono);
+        margin: 26px 0 0;
+        white-space: pre-wrap;
+      }
+      .clay { color: var(--clay-d); }
+      .olive { color: var(--olive); }
+    </style>
+  </head>
+  <body>
+    <main class="frame">
+      <section>
+        <span class="eyebrow">JSON Workbench</span>
+        <h1>Fix JSON locally.</h1>
+        <p>Repair messy JSON, generate schema and code, and create semantic mock data without network calls.</p>
+      </section>
+      <section class="pane">
+        <span class="tag">Local only</span>
+        <pre>{
+  <span class="clay">"status"</span>: <span class="olive">"repaired"</span>,
+  <span class="clay">"outputs"</span>: [
+    "Schema",
+    "TypeScript",
+    "Zod",
+    "Pydantic"
+  ]
+}</pre>
+      </section>
+    </main>
+  </body>
+</html>

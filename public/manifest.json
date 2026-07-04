@@ -3,6 +3,12 @@
   "name": "JSON Workbench",
   "version": "0.1.0",
   "description": "Repair JSON and generate schema, TypeScript, Zod, Pydantic, and mock data locally.",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
   "permissions": ["sidePanel", "contextMenus", "storage", "clipboardRead"],
   "background": {
     "service_worker": "assets/background.js",
@@ -12,7 +18,13 @@
     "default_path": "sidepanel.html"
   },
   "action": {
-    "default_title": "Open JSON Workbench"
+    "default_title": "Open JSON Workbench",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
   },
   "commands": {
     "open-json-workbench": {
