@@ -11,8 +11,8 @@
 - [x] Store listing draft written.
 - [x] Privacy policy draft written.
 - [x] Upload ZIP generated from `dist`.
-- [ ] Replace placeholder support URL.
-- [ ] Replace placeholder privacy contact.
+- [x] Replace placeholder support URL.
+- [x] Replace placeholder privacy contact.
 - [ ] Register Chrome Web Store developer account if needed.
 - [ ] Upload ZIP and store assets in the Developer Dashboard.
 - [ ] Complete dashboard privacy fields using `docs/STORE_LISTING.md`.
@@ -33,4 +33,3 @@ npm audit --audit-level=moderate
 - Screenshots: `store-assets/screenshots/`
 - Small promo tile: `store-assets/promotional/small-promo-440x280.png`
 - Marquee image: `store-assets/promotional/marquee-1400x560.png`
-

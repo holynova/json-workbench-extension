@@ -51,6 +51,7 @@ select,
   gap: 7px;
   min-height: 34px;
   padding: 8px 13px;
+  text-decoration: none;
   transition: background 120ms, border-color 120ms, color 120ms, transform 150ms, box-shadow 150ms;
 }
 

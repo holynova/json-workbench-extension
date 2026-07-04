@@ -1,4 +1,4 @@
-import { Clipboard, Copy, Eraser, FileInput, History, Maximize2, RefreshCcw, Save, Settings } from "lucide-react";
+import { Clipboard, Copy, Eraser, FileInput, Github, History, Maximize2, RefreshCcw, Save, Settings } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { OutputKind } from "../core/outputs";
 import { defaultSettings, type GeneratorSettings, type HistoryItem, type InputSource, type RepairResult } from "../core/types";
@@ -16,6 +16,8 @@ const outputTabs: Array<{ kind: OutputKind | "diff"; label: string; language: "j
   { kind: "pydantic", label: "Pydantic", language: "python" },
   { kind: "mock", label: "Mock", language: "json" }
 ];
+
+const repoUrl = "https://github.com/holynova/json-workbench-extension";
 
 export function App() {
   const [view, setView] = useState<"workbench" | "history">("workbench");
@@ -162,6 +164,9 @@ export function App() {
           <button className="button buttonGhost" onClick={() => window.open("/workbench.html", "_blank")} title="Open full page">
             <Maximize2 size={16} /> Full
           </button>
+          <a className="button buttonGhost" href={repoUrl} target="_blank" rel="noreferrer" title="Open GitHub repository">
+            <Github size={16} /> GitHub
+          </a>
           <button
             onClick={() => setPrivateMode((value) => !value)}
             className={privateMode ? "button buttonToggle active" : "button buttonToggle"}

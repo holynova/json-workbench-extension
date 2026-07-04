@@ -42,5 +42,6 @@ JSON Workbench does not sell, share, or transfer user data to third parties.
 
 ## Contact
 
-Before publishing, replace this section with your support email or support URL.
+Use the GitHub issue tracker for support or privacy questions:
 
+https://github.com/holynova/json-workbench-extension/issues

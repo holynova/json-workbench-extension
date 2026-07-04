@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>JSON Workbench</title>
+    <style>
+      :root {
+        --ivory: #faf9f5;
+        --paper: #fff;
+        --slate: #141413;
+        --clay: #d97757;
+        --clay-d: #b85c3e;
+        --oat: #e3dacc;
+        --g100: #f0eee6;
+        --g300: #d1cfc5;
+        --g500: #87867f;
+        --g700: #3d3d3a;
+        --serif: ui-serif, Georgia, "Times New Roman", Times, serif;
+        --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background:
+          linear-gradient(90deg, rgba(209, 207, 197, 0.28) 1px, transparent 1px),
+          linear-gradient(180deg, rgba(209, 207, 197, 0.24) 1px, transparent 1px),
+          var(--ivory);
+        background-size: 32px 32px;
+        color: var(--g700);
+        font-family: var(--sans);
+      }
+      main { max-width: 1120px; margin: 0 auto; padding: 64px 32px 96px; }
+      .eyebrow {
+        align-items: center;
+        color: var(--g500);
+        display: inline-flex;
+        font: 400 12px/1 var(--mono);
+        gap: 10px;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+      }
+      .eyebrow::before { background: var(--clay); content: ""; height: 1.5px; width: 24px; }
+      h1 {
+        color: var(--slate);
+        font: 500 clamp(40px, 7vw, 72px)/1.04 var(--serif);
+        letter-spacing: -.018em;
+        margin: 18px 0;
+        max-width: 11ch;
+      }
+      p { font-size: 16px; line-height: 1.55; max-width: 680px; }
+      nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 28px 0 36px; }
+      a {
+        color: var(--clay-d);
+        text-decoration-color: var(--oat);
+        text-underline-offset: 3px;
+      }
+      nav a {
+        background: var(--paper);
+        border: 1.5px solid var(--g300);
+        border-radius: 999px;
+        color: var(--slate);
+        display: inline-flex;
+        font: 500 13px/1 var(--sans);
+        padding: 9px 14px;
+        text-decoration: none;
+      }
+      nav a.primary { background: var(--clay); border-color: var(--clay); color: var(--paper); }
+      .shot {
+        background: var(--paper);
+        border: 1.5px solid var(--g300);
+        border-radius: 14px;
+        display: block;
+        max-width: 100%;
+        overflow: hidden;
+      }
+      .shot img { display: block; width: 100%; }
+      .grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        margin-top: 28px;
+      }
+      .card { background: var(--paper); border: 1.5px solid var(--g300); border-radius: 14px; padding: 18px; }
+      .card strong { color: var(--slate); font-family: var(--serif); font-size: 20px; font-weight: 500; }
+      .card p { color: var(--g700); font-size: 13.5px; margin-bottom: 0; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <span class="eyebrow">Local JSON Workbench</span>
+      <h1>Fix JSON locally.</h1>
+      <p>Repair messy JSON, format it, and generate JSON Schema, TypeScript, Zod, Pydantic, and semantic mock data without network calls.</p>
+      <nav>
+        <a class="primary" href="https://github.com/holynova/json-workbench-extension">GitHub Repo</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="store-listing.html">Chrome Store Materials</a>
+      </nav>
+      <figure class="shot"><img src="assets/screenshot.png" alt="JSON Workbench screenshot" /></figure>
+      <section class="grid">
+        <article class="card"><strong>Local only</strong><p>No AI, no telemetry, no remote APIs. Processing stays in the browser.</p></article>
+        <article class="card"><strong>Repair first</strong><p>Handles common JSON-like input problems and highlights failures in the editor.</p></article>
+        <article class="card"><strong>Developer outputs</strong><p>Copy schema, TypeScript, Zod, Pydantic, minified JSON, and mock data.</p></article>
+      </section>
+    </main>
+  </body>
+</html>
+

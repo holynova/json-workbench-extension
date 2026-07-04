@@ -89,11 +89,10 @@ Data handling:
 
 ## Support Copy
 
-Support URL placeholder:
+Support URL:
 
-Add your support page or repository issue URL before publishing.
+https://github.com/holynova/json-workbench-extension/issues
 
-Website URL placeholder:
+Website URL:
 
-Add your product site or repository URL before publishing.
-
+https://holynova.github.io/json-workbench-extension/
