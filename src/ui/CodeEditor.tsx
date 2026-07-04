@@ -1,7 +1,7 @@
 import { json } from "@codemirror/lang-json";
 import { javascript } from "@codemirror/lang-javascript";
 import { python } from "@codemirror/lang-python";
-import { EditorState, RangeSetBuilder } from "@codemirror/state";
+import { Compartment, EditorState, RangeSetBuilder } from "@codemirror/state";
 import { Decoration } from "@codemirror/view";
 import { EditorView, basicSetup } from "codemirror";
 import { useEffect, useRef } from "react";
@@ -21,6 +21,7 @@ interface CodeEditorProps {
 export function CodeEditor({ value, onChange, readonly = false, language = "json", minHeight = 240, errorLine, errorColumn }: CodeEditorProps) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const viewRef = useRef<EditorView | null>(null);
+  const errorHighlightRef = useRef(new Compartment());
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
 
@@ -35,7 +36,7 @@ export function CodeEditor({ value, onChange, readonly = false, language = "json
           languageExtension(language),
           EditorView.editable.of(!readonly),
           EditorState.readOnly.of(readonly),
-          errorHighlightExtension(errorLine, errorColumn),
+          errorHighlightRef.current.of(errorHighlightExtension(errorLine, errorColumn)),
           EditorView.updateListener.of((update) => {
             if (update.docChanged) onChangeRef.current?.(update.state.doc.toString());
           }),
@@ -48,7 +49,15 @@ export function CodeEditor({ value, onChange, readonly = false, language = "json
     });
     viewRef.current = view;
     return () => view.destroy();
-  }, [language, minHeight, readonly, errorLine, errorColumn]);
+  }, [language, minHeight, readonly]);
+
+  useEffect(() => {
+    const view = viewRef.current;
+    if (!view) return;
+    view.dispatch({
+      effects: errorHighlightRef.current.reconfigure(errorHighlightExtension(errorLine, errorColumn))
+    });
+  }, [errorLine, errorColumn]);
 
   useEffect(() => {
     const view = viewRef.current;
