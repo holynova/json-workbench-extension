@@ -16,9 +16,10 @@ interface CodeEditorProps {
   minHeight?: number;
   errorLine?: number;
   errorColumn?: number;
+  className?: string;
 }
 
-export function CodeEditor({ value, onChange, readonly = false, language = "json", minHeight = 240, errorLine, errorColumn }: CodeEditorProps) {
+export function CodeEditor({ value, onChange, readonly = false, language = "json", minHeight = 240, errorLine, errorColumn, className }: CodeEditorProps) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const viewRef = useRef<EditorView | null>(null);
   const errorHighlightRef = useRef(new Compartment());
@@ -65,7 +66,7 @@ export function CodeEditor({ value, onChange, readonly = false, language = "json
     view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: value } });
   }, [value]);
 
-  return <div className="editor" ref={hostRef} />;
+  return <div className={className ? `editor ${className}` : "editor"} ref={hostRef} />;
 }
 
 function languageExtension(language: Language) {

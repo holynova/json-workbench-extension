@@ -23,6 +23,10 @@
   box-sizing: border-box;
 }
 
+* {
+  scrollbar-color: var(--g300) transparent;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -35,6 +39,7 @@ body {
     var(--ivory);
   background-size: 32px 32px;
   color: var(--g700);
+  overflow-x: hidden;
 }
 
 button,
@@ -53,6 +58,7 @@ select,
   padding: 8px 13px;
   text-decoration: none;
   transition: background 120ms, border-color 120ms, color 120ms, transform 150ms, box-shadow 150ms;
+  max-width: 100%;
 }
 
 button:hover,
@@ -118,7 +124,9 @@ button:disabled {
   flex-direction: column;
   gap: 16px;
   min-height: 100vh;
+  overflow-x: hidden;
   padding: 18px;
+  width: 100%;
 }
 
 .appFull {
@@ -186,12 +194,18 @@ button:disabled {
   align-items: center;
   justify-content: flex-end;
   max-width: 720px;
+  min-width: 0;
+}
+
+.toolbarActions > * {
+  flex: 0 1 auto;
 }
 
 .privateHint {
   color: var(--g500);
   font: 400 11.5px/1.35 var(--mono);
   max-width: 210px;
+  min-width: 0;
 }
 
 .privateHint.active {
@@ -225,6 +239,7 @@ button:disabled {
   flex-direction: column;
   gap: 20px;
   min-height: 0;
+  width: 100%;
 }
 
 .panel {
@@ -236,6 +251,8 @@ button:disabled {
   gap: 12px;
   overflow: hidden;
   padding: 14px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .paneHeader {
@@ -245,12 +262,22 @@ button:disabled {
   font: 400 12px/1 var(--mono);
   justify-content: space-between;
   letter-spacing: 0.02em;
+  gap: 12px;
+  min-width: 0;
 }
 
 .paneHeader > div {
   align-items: baseline;
   display: flex;
   gap: 12px;
+  min-width: 0;
+}
+
+.paneHeader > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .paneHeader strong {
@@ -275,6 +302,13 @@ button:disabled {
   gap: 0;
   min-height: 34px;
   overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  max-width: 100%;
+}
+
+.outputTabs::-webkit-scrollbar {
+  display: none;
 }
 
 .outputTab {
@@ -355,11 +389,19 @@ button:disabled {
   border: 1.5px solid var(--g300);
   border-radius: 10px;
   overflow: hidden;
+  min-width: 0;
 }
 
 .editor .cm-editor {
   background: var(--paper);
   color: var(--slate);
+  min-width: 0;
+  max-width: 100%;
+}
+
+.editor .cm-scroller {
+  max-width: 100%;
+  min-width: 0;
 }
 
 .editor .cm-gutters {
@@ -373,6 +415,7 @@ button:disabled {
   caret-color: var(--clay);
   font-family: var(--mono);
   line-height: 1.55;
+  overflow-wrap: anywhere;
 }
 
 .editor .cm-activeLine,
@@ -452,6 +495,9 @@ select {
   color: var(--g700);
   font-size: 13px;
   line-height: 1.45;
+  max-height: none;
+  min-width: 0;
+  overflow: visible;
   padding: 12px 14px;
 }
 
@@ -469,6 +515,7 @@ select {
 
 .repairReport p {
   margin: 8px 0 0;
+  overflow-wrap: anywhere;
 }
 
 .repairReport pre {
@@ -476,8 +523,12 @@ select {
   border: 1.5px solid var(--g300);
   border-radius: 6px;
   font-family: var(--mono);
-  overflow: auto;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
   padding: 10px;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .empty {
@@ -518,6 +569,7 @@ select {
   display: flex;
   flex-direction: column;
   text-align: left;
+  min-width: 0;
 }
 
 .historyLoadButton {
@@ -529,6 +581,7 @@ select {
 .historyItem span {
   color: var(--g500);
   font: 400 11.5px/1.35 var(--mono);
+  overflow-wrap: anywhere;
 }
 
 mark {
@@ -548,7 +601,7 @@ mark {
 
 @media (min-width: 900px) {
   .appFull .workspace {
-    align-items: start;
+    align-items: stretch;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
@@ -557,11 +610,15 @@ mark {
   .appFull .outputPane {
     min-width: 0;
   }
+
+  .appFull .workbenchEditor {
+    flex: 0 0 auto;
+  }
 }
 
 @media (max-width: 720px) {
   .app {
-    padding: 12px;
+    padding: 12px 18px 12px 12px;
   }
 
   .toolbar {
@@ -571,6 +628,8 @@ mark {
 
   .toolbarActions {
     justify-content: flex-start;
+    max-width: 100%;
+    width: 100%;
   }
 
   .brandBlock h1 {
@@ -579,5 +638,53 @@ mark {
 
   .panel {
     padding: 12px;
+  }
+
+  button,
+  select,
+  .button {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .toolbarActions .buttonToggle,
+  .toolbarActions .buttonGhost,
+  .toolbarActions .buttonSecondary {
+    flex: 0 1 auto;
+  }
+
+  .toolbarActions .buttonToggle {
+    flex-basis: 118px;
+    order: 2;
+  }
+
+  .privateHint {
+    flex-basis: 100%;
+    max-width: 100%;
+    order: 3;
+  }
+
+  .paneHeader {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .paneHeader > span,
+  .statusBadge {
+    margin-left: 0;
+  }
+
+  .outputToolbar,
+  .statusBar {
+    justify-content: flex-start;
+  }
+
+  .historyItem {
+    grid-template-columns: 1fr;
+  }
+
+  .iconOnly {
+    justify-self: start;
   }
 }

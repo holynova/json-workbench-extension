@@ -211,9 +211,10 @@ export function App() {
               </div>
             </div>
             <CodeEditor
+              className="workbenchEditor"
               value={input}
               onChange={setInput}
-              minHeight={isFullPage ? 620 : 260}
+              minHeight={isFullPage ? 520 : 260}
               errorLine={!repairResult?.ok ? repairResult?.report.diagnostic?.line : undefined}
               errorColumn={!repairResult?.ok ? repairResult?.report.diagnostic?.column : undefined}
             />
@@ -263,7 +264,7 @@ export function App() {
               )}
             </div>
             {repairResult?.ok ? (
-              <CodeEditor value={output} readonly language={activeOutput.language} minHeight={isFullPage ? 620 : 320} />
+              <CodeEditor className="workbenchEditor" value={output} readonly language={activeOutput.language} minHeight={isFullPage ? 520 : 320} />
             ) : (
               <div className="empty">Repair must succeed before outputs are available.</div>
             )}
