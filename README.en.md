@@ -5,6 +5,8 @@
 </p>
 
 <p align="center">
+  <a href="https://xiaosang.cc/json-workbench-extension/">▶ Try Online</a>
+  ·
   <a href="https://github.com/holynova/json-workbench-extension">GitHub Repository</a>
 </p>
 

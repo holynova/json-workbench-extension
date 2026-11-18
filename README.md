@@ -5,6 +5,8 @@
 </p>
 
 <p align="center">
+  <a href="https://xiaosang.cc/json-workbench-extension/">▶ 在线体验</a>
+  ·
   <a href="https://github.com/holynova/json-workbench-extension">GitHub 仓库</a>
 </p>
 
