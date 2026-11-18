@@ -1,20 +1,16 @@
+<p align="right"><a href="README.en.md">English</a></p>
+
 <p align="center">
   <img src="./assets/readme/hero.svg" width="100%" alt="JSON 工作台 JSON Workbench — 脏 JSON 修好，再派生出代码；右侧是修复示意：残缺的 JSON 经过箭头变成格式化的 JSON，下方是 Schema、TypeScript、Zod、Pydantic、Mock 五个派生输出标签">
 </p>
 
 <p align="center">
-  <a href="https://xiaosang.cc/json-workbench-extension/">▶ 在线体验 Live Demo</a>
-  ·
-  <a href="https://holynova.github.io/json-workbench-extension/">GitHub Pages</a>
-  ·
   <a href="https://github.com/holynova/json-workbench-extension">GitHub 仓库</a>
 </p>
 
 JSON 工作台是一个本地优先的 Chrome JSON 工具：修复脏 JSON，格式化，再生成 JSON Schema、TypeScript、Zod、Pydantic 和语义化 Mock 数据。无 AI、无遥测、无网络请求，所有处理都在浏览器本地完成。当前版本 **v0.1.0**（Manifest V3）。
 
-JSON Workbench is a local-first Chrome extension for JSON: repair dirty JSON, format it, then derive JSON Schema, TypeScript, Zod, Pydantic, and semantic mock data. No AI, no telemetry, no network requests — everything runs locally in the browser. Current version **v0.1.0** (Manifest V3).
-
-## 截图 / Screenshots
+## 截图
 
 <p align="center">
   <img src="./assets/readme/screenshot-formatted.jpg" width="720" alt="工作台主界面：左侧输入 JSON，右侧输出已格式化结果，输出标签有 Formatted、Minified、Diff、Schema、TypeScript、Zod、Pydantic、Mock">
@@ -24,7 +20,7 @@ JSON Workbench is a local-first Chrome extension for JSON: repair dirty JSON, fo
   <img src="./assets/readme/screenshot-mock.jpg" width="720" alt="Mock 输出：输入含 id、城市、状态、邮箱的 JSON，输出中文语义化 Mock 数据，可切换语言、刷新与条数">
 </p>
 
-## 功能 / Features
+## 功能
 
 - **修复脏 JSON**：去 Markdown 代码围栏、识别 JSON / JSONL / 混杂文本中的 JSON 块、提取最可能的 JSON 块，用 `jsonrepair` 保守修复后以 `JSON.parse` 校验；修不好时不生成派生输出，并给出失败诊断（行列、附近片段、可能原因、建议的手动修复）。
 - **8 种派生输出**：格式化、压缩、原修复 Diff、JSON Schema、TypeScript、Zod、Pydantic v2、语义化 Mock；每个输出标签都有自己的复制按钮。
@@ -34,17 +30,17 @@ JSON Workbench is a local-first Chrome extension for JSON: repair dirty JSON, fo
 - **输入来源**：手动输入、粘贴（仅在用户点击后才读剪贴板）、页面选中文本（右键菜单）、文件导入（`.json` / `.txt` / `.log`）、JSONL 一等输入、从日志或混杂文本中提取全部 JSON 块。
 - **本地历史**：输入自动存本地历史，可暂停（Private 模式）；历史只存本机。
 
-## 界面 / Surfaces
+## 界面
 
 - **侧边栏**：主界面，顶部工具栏（粘贴、导入文件、打开完整页、设置），输入 / 输出 / 历史三个主标签；快捷键 `Alt+Shift+J` 打开。
 - **完整页工作台**：处理更大的数据与更长的生成代码，左侧输入、历史与修复报告，右侧输出。
 
-## 隐私 / Privacy
+## 隐私
 
 - 不联网、不调 AI、不发遥测；内容安全策略限定 `script-src 'self'`。
 - 权限只有四项：`sidePanel`、`contextMenus`、`storage`、`clipboardRead`；剪贴板只在用户点击粘贴按钮后才读，页面选中内容只通过右键菜单显式处理，不自动监听。详见 [docs/PRIVACY_POLICY.md](docs/PRIVACY_POLICY.md)。
 
-## 安装 / Install
+## 安装
 
 从源码加载（未上架 Chrome 应用商店）：
 
@@ -59,7 +55,7 @@ npm run package:chrome   # 构建并打包，产物在 release/
 
 开发：`npm run dev`（Vite，`http://127.0.0.1:5173`）；测试：`npm test`（Vitest）；类型检查：`npm run typecheck`。
 
-## 技术 / Tech
+## 技术
 
 - React 18 + TypeScript + Vite，编辑器用 CodeMirror 6（JSON / JS / Python 高亮）。
 - 修复引擎 `jsonrepair`；Mock 用 `@faker-js/faker`；历史用 Dexie（IndexedDB）。
@@ -75,13 +71,3 @@ src/extension/          background service worker
 docs/                   产品规格、隐私政策、上架清单
 store-assets/           商店截图与宣传图
 ```
-
-## English
-
-**JSON Workbench** is a local-first Chrome extension (Manifest V3, v0.1.0) that repairs dirty JSON and derives developer-ready artifacts from it — formatted/minified JSON, diff, JSON Schema (2020-12 by default, Draft-07 optional), TypeScript, Zod, Pydantic v2, and semantic mock data (English/Chinese locales, seeded, reproducible).
-
-- **Repair**: strips Markdown fences, detects JSON/JSONL/JSON-like blocks, extracts the most likely block from noisy text, repairs conservatively with `jsonrepair`, validates with `JSON.parse`. On failure, no derived outputs are generated and diagnostics (line/column, snippet, likely cause, suggested fix) are shown.
-- **Inputs**: manual typing, paste (clipboard read only after an explicit click), page selection via context menu, file import (`.json`/`.txt`/`.log`), JSONL as a first-class format.
-- **Privacy**: no network, no AI, no telemetry. Four permissions only: `sidePanel`, `contextMenus`, `storage`, `clipboardRead`. History is stored locally and can be paused (Private mode).
-- **Install from source**: `npm install && npm run package:chrome`, then load the build as an unpacked extension in Chrome (developer mode). Dev: `npm run dev`; tests: `npm test` (Vitest).
-- **Tech**: React 18 + TypeScript + Vite, CodeMirror 6 editor, `jsonrepair` engine, `@faker-js/faker` for mocks, Dexie for history. Core logic is pure functions in `src/core/`; processing runs in a Web Worker.
